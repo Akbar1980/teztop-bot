@@ -7,7 +7,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const { createClient } = require('@supabase/supabase-js');
 
 // ── Config ────────────────────────────────────────────────────
-const BOT_TOKEN = '8369748051:AAFh-JEhectG2uztF-hN-lDy2f4-jdfuXm0';
+const BOT_TOKEN = '8369748051:AAGybKzsGmkBZVvVy2gTDtikYsQK8jVHJIM';
 const MINI_APP_URL = 'https://teztop-miniapp.vercel.app';
 const SUPABASE_URL = 'https://kexttjudzoclhujqyovy.supabase.co';
 const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtleHR0anVkem9jbGh1anF5b3Z5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDEyMjEzNiwiZXhwIjoyMDg5Njk4MTM2fQ.HBGEqOL-dtK5enysuNOuBcJPGQdRQVay7aRVXTR0CN4';
