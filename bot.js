@@ -46,7 +46,7 @@ bot.onText(/\/start(.*)/, async (msg, match) => {
       .single();
 
     if (existingUser) {
-      // Already registered — use inline keyboard (passes initData correctly)
+      // ── Returning registered user ──────────────────────────
       await bot.sendMessage(chatId,
         `Xush kelibsiz, ${firstName}! 🎉\nQarshi shahridagi joylarni topish uchun quyidagi tugmani bosing:`,
         {
@@ -59,17 +59,24 @@ bot.onText(/\/start(.*)/, async (msg, match) => {
         }
       );
     } else {
-      // New user — ask for phone number
+      // ── New unregistered user — two options ────────────────
       await bot.sendMessage(chatId,
-        `Salom, ${firstName}! 👋\n\nTezTop — Qarshi shahridagi joylarni topish ilovasi.\n\nRo'yxatdan o'tish uchun telefon raqamingizni yuboring:`,
+        `Salom, ${firstName}! 👋\n\n` +
+        `TezTop — Qarshi shahridagi joylarni topish, sharh qoldirish va do'stlar bilan ulashish ilovasi.\n\n` +
+        `Ilovani hoziroq ochishingiz mumkin — buning uchun ro'yxatdan o'tish shart emas.\n` +
+        `Sharh qoldirish, sevimlilarni belgilash va yangi joy qo'shish uchun esa ro'yxatdan o'tish kerak — bu mutlaqo bepul va 30 soniyadan kam vaqt oladi.`,
         {
           reply_markup: {
-            keyboard: [[{
-              text: '📱 Telefon raqamni yuborish',
-              request_contact: true,
-            }]],
-            resize_keyboard: true,
-            one_time_keyboard: true,
+            inline_keyboard: [
+              [{
+                text: "🗺 TezTop ni ochish",
+                web_app: { url: MINI_APP_URL }
+              }],
+              [{
+                text: "📱 Ro'yxatdan o'tish — sharh qoldirish va yanada ko'proq imkoniyatlar uchun",
+                callback_data: 'register'
+              }]
+            ]
           }
         }
       );
@@ -77,6 +84,29 @@ bot.onText(/\/start(.*)/, async (msg, match) => {
   } catch (err) {
     console.error('Error in /start:', err.message);
     await bot.sendMessage(chatId, `Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.`);
+  }
+});
+
+// ── Register button tapped ────────────────────────────────────
+bot.on('callback_query', async (query) => {
+  const chatId = query.message.chat.id;
+  const firstName = query.from.first_name || 'Foydalanuvchi';
+
+  if (query.data === 'register') {
+    await bot.answerCallbackQuery(query.id);
+    await bot.sendMessage(chatId,
+      `Ro'yxatdan o'tish uchun telefon raqamingizni yuboring, ${firstName}:`,
+      {
+        reply_markup: {
+          keyboard: [[{
+            text: "📱 Telefon raqamni yuborish",
+            request_contact: true,
+          }]],
+          resize_keyboard: true,
+          one_time_keyboard: true,
+        }
+      }
+    );
   }
 });
 
@@ -104,13 +134,12 @@ bot.on('contact', async (msg) => {
 
     if (error) throw error;
 
-    // Use inline keyboard after registration too
     await bot.sendMessage(chatId,
-      `✅ Ro'yxatdan o'tdingiz!\n\nXush kelibsiz, ${firstName}! Quyidagi tugma orqali TezTop ni oching:`,
+      `✅ Ro'yxatdan o'tdingiz!\n\nXush kelibsiz, ${firstName}! Endi barcha imkoniyatlardan foydalanishingiz mumkin:`,
       {
         reply_markup: {
           inline_keyboard: [[{
-            text: '🗺 TezTop ni ochish',
+            text: "🗺 TezTop ni ochish",
             web_app: { url: MINI_APP_URL }
           }]]
         }
